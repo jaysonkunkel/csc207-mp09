@@ -37,8 +37,7 @@ public class JSONArray {
    * Convert to a string (e.g., for printing).
    */
   public String toString() {
-    
-    return this.values.toString();          // STUB
+    return this.values.toString();
   } // toString()
 
   /**
@@ -55,8 +54,8 @@ public class JSONArray {
   public int hashCode() {
     if (this.values == null){
       return 0;
-    }
-    return this.values.hashCode();           // STUB
+    } // if
+    return this.values.hashCode();
   } // hashCode()
 
   // +--------------------+------------------------------------------
@@ -67,7 +66,7 @@ public class JSONArray {
    * Write the value as JSON.
    */
   public void writeJSON(PrintWriter pen) {
-                        // STUB
+    pen.print(this.values.toString());
   } // writeJSON(PrintWriter)
 
   /**
