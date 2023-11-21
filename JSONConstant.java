@@ -1,5 +1,10 @@
 import java.io.PrintWriter;
-
+/**
+ * JSON arrays.
+ * @author Jayson Kunkel
+ * @author Sam Bigham
+ * @author Sam Rebelsky
+ */
 /**
  * JSON constants.
  */
