@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 /**
  * JSON arrays.
+ * @author Jayson Kunkel
+ * @author Sam Bigham
  */
 public class JSONArray {
 
@@ -35,21 +37,26 @@ public class JSONArray {
    * Convert to a string (e.g., for printing).
    */
   public String toString() {
-    return "";          // STUB
+    
+    return this.values.toString();          // STUB
   } // toString()
 
   /**
    * Compare to another object.
    */
   public boolean equals(Object other) {
-    return true;        // STUB
+        return (((other instanceof JSONArray) && (this.values == ((JSONArray) other).values))
+        || (this.values == other));
   } // equals(Object)
 
   /**
    * Compute the hash code.
    */
   public int hashCode() {
-    return 0;           // STUB
+    if (this.values == null){
+      return 0;
+    }
+    return this.values.hashCode();           // STUB
   } // hashCode()
 
   // +--------------------+------------------------------------------
