@@ -3,6 +3,8 @@ import java.math.BigDecimal;
 
 /**
  * JSON reals.
+ * @author Jayson Kunkel
+ * @author Sam Bigham
  */
 public class JSONReal {
 
@@ -55,14 +57,18 @@ public class JSONReal {
    * Compare to another object.
    */
   public boolean equals(Object other) {
-    return true;        // STUB
+    return (((other instanceof JSONReal) && (this.value == ((JSONReal) other).value))
+        || (this.value == other));
   } // equals(Object)
 
   /**
    * Compute the hash code.
    */
   public int hashCode() {
-    return 0;           // STUB
+    if (this.value == null)
+      return 0;
+    else
+      return this.value.hashCode();
   } // hashCode()
 
   // +--------------------+------------------------------------------
@@ -73,7 +79,7 @@ public class JSONReal {
    * Write the value as JSON.
    */
   public void writeJSON(PrintWriter pen) {
-                        // STUB
+    pen.print(this.toString());
   } // writeJSON(PrintWriter)
 
   /**
