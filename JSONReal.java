@@ -57,7 +57,7 @@ public class JSONReal {
    * Compare to another object.
    */
   public boolean equals(Object other) {
-    return (((other instanceof JSONReal) && (this.value == ((JSONReal) other).value))
+    return (((other instanceof JSONReal) && (this.value.equals(((JSONReal) other).value)))
         || (this.value == other));
   } // equals(Object)
 
