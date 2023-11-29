@@ -3,7 +3,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.text.ParseException;
-
+/*
+ * @author Jayson Kunkel
+ * @author Sam Bigham
+ */
 /**
  * Utilities for our simple implementation of JSON.
  */
@@ -58,13 +61,21 @@ public class JSON {
    * Parse JSON from a reader, keeping track of the current position
    */
   static JSONValue parseKernel(Reader source) throws ParseException, IOException {
+    JSONHash hashMap = new JSONHash();
+    char[] charBuff = new char[100]; //100 is arbitrary, should be changed
     int ch;
     ch = skipWhitespace(source);
     if (-1 == ch) {
       throw new ParseException("Unexpected end of file", pos);
     }
     // STUB
-    throw new ParseException("Unimplemented", pos);
+    //starting to implement, but very much not done
+    int i = 0;
+    while(source.read(charBuff) != -1){ //reads until end of file hopefully
+      System.out.println(charBuff[i]);
+      i++;
+    }
+    return hashMap;
   } // parseKernel
 
   /**
