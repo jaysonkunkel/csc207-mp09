@@ -3,8 +3,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.text.ParseException;
+
 /*
  * @author Jayson Kunkel
+ * 
  * @author Sam Bigham
  */
 /**
@@ -62,19 +64,24 @@ public class JSON {
    */
   static JSONValue parseKernel(Reader source) throws ParseException, IOException {
     JSONHash hashMap = new JSONHash();
-    char[] charBuff = new char[100]; //100 is arbitrary, should be changed
+    // char[] charBuff = new char[100]; //100 is arbitrary, should be changed
     int ch;
     ch = skipWhitespace(source);
     if (-1 == ch) {
       throw new ParseException("Unexpected end of file", pos);
     }
     // STUB
-    //starting to implement, but very much not done
-    int i = 0;
-    while(source.read(charBuff) != -1){ //reads until end of file hopefully
-      System.out.println(charBuff[i]);
-      i++;
+    // starting to implement, but very much not done
+
+    while (ch != -1) {
+      System.out.println((char) ch);
+
+
+      ch = source.read();
+      ++pos;
     }
+
+
     return hashMap;
   } // parseKernel
 
@@ -91,8 +98,7 @@ public class JSON {
   } // skipWhitespace(Reader)
 
   /**
-   * Determine if a character is JSON whitespace (newline, carriage return,
-   * space, or tab).
+   * Determine if a character is JSON whitespace (newline, carriage return, space, or tab).
    */
   static boolean isWhitespace(int ch) {
     return (' ' == ch) || ('\n' == ch) || ('\r' == ch) || ('\t' == ch);
