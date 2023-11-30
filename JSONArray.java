@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 /**
  * JSON arrays.
+ * 
  * @author Jayson Kunkel
  * @author Sam Bigham
  */
@@ -27,7 +28,7 @@ public class JSONArray implements JSONValue {
    */
   public JSONArray() {
     this.values = new ArrayList<JSONValue>();
-  } // JSONArray() 
+  } // JSONArray()
 
   // +-------------------------+-------------------------------------
   // | Standard object methods |
@@ -44,7 +45,7 @@ public class JSONArray implements JSONValue {
    * Compare to another object.
    */
   public boolean equals(Object other) {
-        return (((other instanceof JSONArray) && (this.values == ((JSONArray) other).values))
+    return (((other instanceof JSONArray) && (this.values == ((JSONArray) other).values))
         || (this.values == other));
   } // equals(Object)
 
@@ -52,7 +53,7 @@ public class JSONArray implements JSONValue {
    * Compute the hash code.
    */
   public int hashCode() {
-    if (this.values == null){
+    if (this.values == null) {
       return 0;
     } // if
     return this.values.hashCode();

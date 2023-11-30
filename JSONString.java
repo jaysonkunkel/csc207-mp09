@@ -66,6 +66,7 @@ public class JSONString implements JSONValue {
    */
   public void writeJSON(PrintWriter pen) {
     pen.println("\"" + this.toString() + "\"");
+    // TODO: add slashes
   } // writeJSON(PrintWriter)
 
   /**

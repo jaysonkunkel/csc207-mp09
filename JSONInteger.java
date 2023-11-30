@@ -69,7 +69,7 @@ public class JSONInteger implements JSONValue {
     if (this.value == null) {
       return 0;
     } else {
-      return this.value.hashCode(); 
+      return this.value.hashCode();
     }
   } // hashCode()
 
