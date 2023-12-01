@@ -47,7 +47,7 @@ public class JSONConstant implements JSONValue {
   /**
    * Build a new constant.
    */
-  private JSONConstant(Object value) {
+  public JSONConstant(Object value) {
     this.value = value;
   } // JSONConstant
 

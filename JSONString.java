@@ -65,7 +65,33 @@ public class JSONString implements JSONValue {
    * Write the value as JSON.
    */
   public void writeJSON(PrintWriter pen) {
-    pen.println("\"" + this.toString() + "\"");
+    // unlike toString, we print the enclosing "" and escape characters
+    String str = "\"";
+    int i = 0;
+    while (i < this.value.length()) {
+      switch (this.value.charAt(i)) {
+        case '\"': str = str + "\\\"";
+        break;
+        case '\b' : str = str + "\\b";
+        break;
+        case '\n' : str = str + "\\n";
+        break;
+        case '\r' : str = str + "\\r";
+        break;
+        case '\f' : str = str + "\\f";
+        break;
+        case '\'' : str = str + "\\'";
+        break;
+        case '\t' : str = str + "\\t";
+        break;
+        case '\\' : str = str + "\\\\";
+        break;
+        default:
+        str = str + this.value.charAt(i);
+      } // switch
+      i++;
+    } // while
+    pen.print(str + "\"");
     // TODO: add slashes
   } // writeJSON(PrintWriter)
 
