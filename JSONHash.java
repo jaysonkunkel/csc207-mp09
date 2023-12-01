@@ -100,8 +100,18 @@ public class JSONHash implements JSONValue {
    * Compare to another object.
    */
   public boolean equals(Object other) {
-    return (((other instanceof JSONHash) && (this.buckets.equals(((JSONHash) other).buckets)))
-        || (this.buckets == other));
+    boolean isTrue = true;
+    if((this.buckets != other)){
+      isTrue = false;
+    }
+    if(other instanceof JSONHash){
+      for(int i = 0; i < this.buckets.length; i++){
+        if(this.buckets[i].equals(((JSONHash)other).buckets[i])){
+          isTrue = false;
+        }
+      }
+    }
+    return isTrue;
   } // equals(Object)
 
   /**
