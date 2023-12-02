@@ -9,6 +9,7 @@ import java.text.ParseException;
  * 
  * @author Sam Bigham
  */
+
 /**
  * Utilities for our simple implementation of JSON.
  */
@@ -63,22 +64,30 @@ public class JSON {
    * Parse JSON from a reader, keeping track of the current position
    */
   static JSONValue parseKernel(Reader source) throws ParseException, IOException {
+    // the hash table to store key/value pairs
     JSONHash hashMap = new JSONHash();
+    // the current character in the source
     int ch;
     ch = skipWhitespace(source);
     if (-1 == ch) {
       throw new ParseException("Unexpected end of file", pos);
     } // if
 
+    // parsing first '{' creates hash to hold pairs
+    if ((char) ch == '{'){
+      hashMap = (JSONHash) switchStat(source, ch);
+      ch = source.read();
+    } // if
+
+    // while there are characters left to read, read the next one
     while (ch != -1) {
-      //char c = (char) ch;
-      //System.out.print(c);
-      //check whether to store hashMap
-      System.out.print(switchStat(source, ch));
+
+      // parse each character and increase position
+      switchStat(source, ch);
       ch = source.read();
       ++pos;
     } // while
-
+    //System.out.println(hashMap.toString());
     return hashMap;
   } // parseKernel
 
@@ -86,20 +95,26 @@ public class JSON {
    * Based on the input character c, take appropriate parsing action.
    */
   static JSONValue switchStat(Reader source, int c) throws IOException{
-         switch (c) {
+    switch (c) {
+      // indicates a hash
       case '{':
         return hashMapParser(source, c, '}');
+      // indicates a string
       case '"':
         return stringParser(source, c, '"');
+      // indicates an array
       case '[':
         return arrayParser(source, c, ']');
       default:
+      // indicates a constant
       if (Character.isAlphabetic(c)){
          return constantParser(source, c,  ',');
       } // if
+      // indicates a number
       else if (Character.isDigit(c) || c == '-' || c == '+') {
          return digitParser(source, c, ',');
       } // else if
+      // all other input
       else return new JSONString(String.valueOf((char) c));
       // else if (!Character.isWhitespace(c) && !(c == ':') && !(c == ',') && !(c == '}')){
       //   throw new IOException("Error: unsupported character " + (char) c);
@@ -114,6 +129,7 @@ public class JSON {
     String str = String.valueOf((char)c);
     int ch; 
 
+    // read characters into a string until the target character
     do {
       ch = source.read();
       String strCH = String.valueOf((char)ch);
@@ -122,14 +138,16 @@ public class JSON {
       //System.out.print("char = " + (char) ch);
     } while ((char)ch != target && !isWhitespace(ch) && (char)ch != ']');
     
-
-    //str = str.substring(0, str.length() - 1);
+    // remove enclosing quotes
     if (str.charAt(0) == '"' && str.charAt(str.length() - 1) == '"') {
       str = str.substring(1, str.length() - 1);
     } // if
+
+    // remove trailing comma
     if (str.charAt(str.length() - 1) == ','){
       str = str.substring(0, str.length() - 1);
     } // if
+
     return new JSONString(str.trim());
   } // stringParser(Reader, char)
   
@@ -141,13 +159,14 @@ public class JSON {
     String str = stringParser(source, c, target).getValue();
     boolean isInteger = true;
 
+    // check if it's a real or integer
     for (int i = 0; i < str.length(); i++) {
       if (!Character.isDigit(str.charAt(i))) {
           isInteger = false;
       } // if
     } // for
 
-    //str = str.substring(0, str.length() - 1);
+    // removes any extra character at the end
     if (!Character.isDigit(str.charAt(str.length()-1))) {
       str = str.substring(0, str.length()-1);
     } // if
@@ -164,10 +183,12 @@ public class JSON {
   static JSONConstant constantParser(Reader source, int c, char target) throws IOException {
     String str = stringParser(source, c, target).getValue();
     
+    // remove trailing square bracket, if necessary
     if (str.charAt(str.length() - 1) == ']'){
       str = str.substring(0, str.length() -1);
     } // if
 
+    // determine which constant it is, or throw exception if invalid
     if (str.equals("true")) {
       return new JSONConstant(true);
     } else if (str.equals("false")) {
@@ -185,61 +206,48 @@ public class JSON {
   */
   static JSONArray arrayParser(Reader source, int c, char target) throws IOException{
     JSONArray arr = new JSONArray();
-    int i = 0;
 
-    // arr.add(switchStat(source, c));
-    // c = source.read();
-    // while(c != target && i < 10 && c != ' ' && c != ','){
-    //   arr.add(switchStat(source, c));
-    //    i++;
-    //   c = source.read();
-    // }
-
-    while (c != target && i < 10 && c != ' ' && c != ','){
+    // read characters and add corresponding objects to array
+    while (c != target && c != ' ' && c != ','){
       c = source.read();
       //System.out.println("c is : " + (char) c);
-      if(c != ' ' && c != ','){
-      arr.add(switchStat(source, c));
-      } 
-      i++;
-    }
+      if (c != ' ' && c != ',') {
+        arr.add(switchStat(source, c));
+      } // if
+    } // while
      return arr; 
   } // arrayParser(Reader, int, char)
 
   static JSONHash hashMapParser (Reader source, int c, char target) throws IOException{
+    // a hash to store the key/value pairs
     JSONHash JHash = new JSONHash();
+    // an array that stores every object read in
     JSONArray arr = new JSONArray();
 
+    // read/parse characters and add corresponding objects to array
     while( c != target && c != '}'){
-
-      
       c = source.read();
-      // System.out.println("tis is c : " + (char) c);
 
+      // some characters don't indicate objects
       if(c != ' ' && c != ',' && c!= ':' && c != '}'){
-        System.out.println((char)c);
-
         JSONValue obj = switchStat(source, c);
-
-        System.out.print(obj.getValue() + " ");
-       // System.out.print(obj.getValue() + " ");
-        //JHash.set(str, obj);
         arr.add(obj);
-        //System.out.println(JHash.toString());
       } // if
     } // while
 
     //System.out.println("\n" + arr.toString());
 
+    // add key/value pairs to the hash map
     for (int i = 0; i < arr.size(); i += 2) {
-      //System.out.print(arr.get(i) + " ");
+      // keys are always JSONStrings
       JSONString key = new JSONString(arr.get(i).toString());
+      // values are always JSONValues
       JSONValue val = (JSONValue)(arr.get(i + 1));
       JHash.set(key, val);
-    }
+    } // for
 
     return JHash;
-  }
+  } // hashMapParser(Reader, int, char)
 
   /**
    * Get the next character from source, skipping over whitespace.
@@ -253,16 +261,14 @@ public class JSON {
     return ch;
   } // skipWhitespace(Reader)
 
-  static int skipWhitespaceAndOthers(Reader source) throws IOException {
-    int ch;
-    do {
-      ch = source.read();
-      ++pos;
-    } while (isWhitespace(ch) || ch == ':' || ch ==',');
-    return ch;
-  } // skipWhitespace(Reader)
-
-
+  // static int skipWhitespaceAndOthers(Reader source) throws IOException {
+  //   int ch;
+  //   do {
+  //     ch = source.read();
+  //     ++pos;
+  //   } while (isWhitespace(ch) || ch == ':' || ch ==',');
+  //   return ch;
+  // } // skipWhitespace(Reader)
 
   /**
    * Determine if a character is JSON whitespace (newline, carriage return, space, or tab).
