@@ -80,7 +80,7 @@ public class JSONHash implements JSONValue {
    */
   public String toString() {
     String str = "";
-    str = str.concat("Capacity: " + this.buckets.length + ", Size: " + this.size + "\n");
+    //str = str.concat("Capacity: " + this.buckets.length + ", Size: " + this.size + "\n");
     // goes through each value in the array
     for (int i = 0; i < this.buckets.length; i++) {
       @SuppressWarnings("unchecked")
