@@ -1,7 +1,8 @@
 Mini-Project 8: JSON
 ====================
 
-A simple JSON parser. The parser reads in key/value pairs and stores them in a hash table.
+A simple JSON parser. The parser reads in key/value pairs from 
+a source and stores them in a hash table.
 
 Implemented by Jayson Kunkel and Sam Bigham for CSC-207-01 2023Fa.
 
