@@ -101,16 +101,16 @@ public class JSONHash implements JSONValue {
    */
   public boolean equals(Object other) {
     boolean isTrue = true;
-    if((this.buckets != other)){
+    if ((this.buckets != other)) {
       isTrue = false;
-    }
-    if(other instanceof JSONHash){
+    } // if
+    if (other instanceof JSONHash) {
       for(int i = 0; i < this.buckets.length; i++){
-        if(this.buckets[i].equals(((JSONHash)other).buckets[i])){
+        if (!this.buckets[i].equals(((JSONHash)other).buckets[i])) {
           isTrue = false;
-        }
-      }
-    }
+        } // if
+      } // for
+    } // if
     return isTrue;
   } // equals(Object)
 
@@ -139,7 +139,7 @@ public class JSONHash implements JSONValue {
     str = str.concat(writeJSONHelper(pen) + " }");
     try {
       FileWriter writer = new FileWriter(fileName);
-      String hashTable = str; // needs to include " "" " and slashes
+      String hashTable = str;
       writer.write(hashTable);
       writer.close();
       pen.println("wrote to file");

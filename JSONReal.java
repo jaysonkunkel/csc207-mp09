@@ -51,7 +51,7 @@ public class JSONReal implements JSONValue {
    * Convert to a string (e.g., for printing).
    */
   public String toString() {
-    return this.value.toPlainString();
+    return this.value.toString();
   } // toString()
 
   /**
@@ -80,7 +80,7 @@ public class JSONReal implements JSONValue {
    * Write the value as JSON.
    */
   public void writeJSON(PrintWriter pen) {
-    pen.println(this.value.toEngineeringString());
+    pen.println(this.value.toString());
   } // writeJSON(PrintWriter)
 
   /**
