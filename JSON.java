@@ -51,7 +51,7 @@ public class JSON {
     JSONValue result = parseKernel(source);
     if (-1 != skipWhitespace(source)) {
       throw new ParseException("Characters remain at end", pos);
-    }
+    } // if
     return result;
   } // parse(Reader)
 
@@ -64,41 +64,34 @@ public class JSON {
    */
   static JSONValue parseKernel(Reader source) throws ParseException, IOException {
     JSONHash hashMap = new JSONHash();
-    // char[] charBuff = new char[100]; //100 is arbitrary, should be changed
     int ch;
     ch = skipWhitespace(source);
     if (-1 == ch) {
       throw new ParseException("Unexpected end of file", pos);
-    }
-    // STUB
-    // starting to implement, but very much not done
+    } // if
 
     while (ch != -1) {
-      char c = (char) ch;
+      //char c = (char) ch;
       //System.out.print(c);
       //check whether to store hashMap
-
       System.out.print(switchStat(source, ch));
-
-
       ch = source.read();
       ++pos;
-    }
-
+    } // while
 
     return hashMap;
   } // parseKernel
 
-  
+  /**
+   * Based on the input character c, take appropriate parsing action.
+   */
   static JSONValue switchStat(Reader source, int c) throws IOException{
          switch (c) {
       case '{':
-      // TODO
         return hashMapParser(source, c, '}');
       case '"':
         return stringParser(source, c, '"');
       case '[':
-      // TODO
         return arrayParser(source, c, ']');
       default:
       if (Character.isAlphabetic(c)){
@@ -112,7 +105,7 @@ public class JSON {
       //   throw new IOException("Error: unsupported character " + (char) c);
       // } // else
      } // switch
-  }//switchStat
+  } // switchStat(Reader, int)
 
   /*
   * parses string until it reaches the target char and then returns string
@@ -131,9 +124,9 @@ public class JSON {
     
 
     //str = str.substring(0, str.length() - 1);
-    // if (str.charAt(0) == '"' && str.charAt(str.length() - 1) == '"') {
-    //   str = str.substring(1, str.length() - 1);
-    // } // if
+    if (str.charAt(0) == '"' && str.charAt(str.length() - 1) == '"') {
+      str = str.substring(1, str.length() - 1);
+    } // if
     if (str.charAt(str.length() - 1) == ','){
       str = str.substring(0, str.length() - 1);
     } // if
@@ -155,9 +148,9 @@ public class JSON {
     } // for
 
     //str = str.substring(0, str.length() - 1);
-    if(!Character.isDigit(str.charAt(str.length()-1))){
+    if (!Character.isDigit(str.charAt(str.length()-1))) {
       str = str.substring(0, str.length()-1);
-    }
+    } // if
 
     if (isInteger) {
       return new JSONInteger(str);
@@ -215,40 +208,36 @@ public class JSON {
 
   static JSONHash hashMapParser (Reader source, int c, char target) throws IOException{
     JSONHash JHash = new JSONHash();
-    JSONValue key = null;
-    JSONValue val = null;
+    JSONArray arr = new JSONArray();
 
-    int i = 0;
     while( c != target && c != '}'){
 
       
       c = source.read();
       // System.out.println("tis is c : " + (char) c);
-      // i++;
 
-      if(c != ' ' && c != ',' && c!= ':'){
-        //System.out.print((char)c);
+      if(c != ' ' && c != ',' && c!= ':' && c != '}'){
+        System.out.println((char)c);
 
-        System.out.print(switchStat(source, c).toString() + " ");
-        JHash.set(new JSONString("a"), switchStat(source, c));
-      }
-      i++;
+        JSONValue obj = switchStat(source, c);
 
-        //System.out.println(switchStat(source, c));
+        System.out.print(obj.getValue() + " ");
+       // System.out.print(obj.getValue() + " ");
+        //JHash.set(str, obj);
+        arr.add(obj);
+        //System.out.println(JHash.toString());
+      } // if
+    } // while
 
-      // skipWhitespace(source);
-      // c = source.read();
-      // System.out.println("tis is c : " + (char) c);
-      // key = (switchStat(source, (char) c));
-      // skipWhitespace(source);
-      // c = source.read();
-      // System.out.println("tis is new c : " + c);
-      // val = (switchStat(source, (char)c));
-      // System.out.println("this is the key : " + key + " this is the value : " + val);
-      
-      //JHash.set((JSONString)key, val);
+    //System.out.println("\n" + arr.toString());
+
+    for (int i = 0; i < arr.size(); i += 2) {
+      //System.out.print(arr.get(i) + " ");
+      JSONString key = new JSONString(arr.get(i).toString());
+      JSONValue val = (JSONValue)(arr.get(i + 1));
+      JHash.set(key, val);
     }
-    //JHash.set(key, val);
+
     return JHash;
   }
 
